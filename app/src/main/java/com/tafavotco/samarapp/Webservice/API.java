@@ -3,6 +3,7 @@ package com.tafavotco.samarapp.Webservice;
 import com.tafavotco.samarapp.model.loginResponseModel;
 import com.tafavotco.samarapp.model.verifyResponseModel;
 import com.tafavotco.samarapp.ui.Login;
+import com.tafavotco.samarapp.ui.ScanBarCode;
 import com.tafavotco.samarapp.ui.verifying;
 
 import java.util.Map;
@@ -27,7 +28,14 @@ public interface API {
     @POST("auth/login")
     Call<loginResponseModel> sendCode(@Body Login.requestCode requestCodes);
 
+    @POST("events/registration")
+    Call<String> registration(@Body ScanBarCode.BarcodeRequest barcodeValue);
 
+    @POST("events/checkin")
+    Call<String> checkin(@Body ScanBarCode.BarcodeRequest barcodeValue);
+
+    @POST("events/checkout")
+    Call<String> checkout(@Body ScanBarCode.BarcodeRequest barcodeValue);
 
 
 }

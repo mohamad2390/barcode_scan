@@ -88,7 +88,6 @@ public class Login extends AppCompatActivity {
 
     public class requestCode{
         private String cell;
-
         public requestCode(String cell) {
             this.cell = cell;
         }

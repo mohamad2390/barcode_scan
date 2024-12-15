@@ -24,7 +24,7 @@
             android:name=".ui.ScanBarCode"
             android:exported="false" />
         <activity
-            android:name=".ui.Login"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.verifying" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.Login" />
     </application>
 
 </manifest>

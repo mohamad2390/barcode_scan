@@ -42,6 +42,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btn_checkIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(MainActivity.this, ScanBarCode.class);
+                myIntent.putExtra("method", "checkIn");
+                startActivity(myIntent);
+            }
+        });
+
+        btn_checkOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(MainActivity.this, ScanBarCode.class);
+                myIntent.putExtra("method", "checkOut");
+                startActivity(myIntent);
+            }
+        });
+
     }
 
     public void init(){

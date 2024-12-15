@@ -1,7 +1,12 @@
 [versions]
 adapterRxjava2 = "2.4.0"
-agp = "8.5.0"
+agp = "8.7.3"
 androidSweetalert2 = "2.0.2"
+barcodeScanning = "17.1.0"
+cameraCamera2 = "1.1.0"
+cameraCore = "1.1.0"
+cameraLifecycle = "1.1.0"
+cameraView = "1.0.0-alpha29"
 converterGson = "2.5.0"
 core = "3.5.2"
 glide = "4.16.0"
@@ -20,6 +25,11 @@ zxingAndroidEmbedded = "4.3.0"
 [libraries]
 adapter-rxjava2 = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "adapterRxjava2" }
 android-sweetalert2 = { module = "com.github.taimoorsultani:android-sweetalert2", version.ref = "androidSweetalert2" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraView" }
+barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
+camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCore" }
+camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraLifecycle" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.google.zxing:core", version.ref = "core" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }

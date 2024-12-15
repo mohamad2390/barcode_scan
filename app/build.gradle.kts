@@ -52,7 +52,13 @@ dependencies {
 //    glide
     implementation (libs.glide)
 
-    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation (libs.zxing.android.embedded)
+
+    implementation (libs.barcode.scanning)
+    implementation (libs.camera.core)
+    implementation (libs.androidx.camera.camera2)
+    implementation (libs.camera.lifecycle)
+    implementation (libs.androidx.camera.view)
 
 //    sweetAlert
 //    implementation (libs.android.sweetalert2)
