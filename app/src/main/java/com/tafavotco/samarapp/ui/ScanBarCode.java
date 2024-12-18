@@ -1,7 +1,6 @@
 package com.tafavotco.samarapp.ui;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
@@ -15,22 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.camera2.internal.annotation.CameraExecutor;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
@@ -46,22 +32,24 @@ import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
-import com.google.zxing.ResultPoint;
-
 import com.tafavotco.samarapp.R;
-import com.journeyapps.barcodescanner.BarcodeView;
-
-import com.journeyapps.barcodescanner.BarcodeResult;
 import com.tafavotco.samarapp.Webservice.WebserviceHelper;
-import com.tafavotco.samarapp.model.loginResponseModel;
+import com.tafavotco.samarapp.data.PreferencesHelper;
+import com.tafavotco.samarapp.utils.Convert;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,7 +62,9 @@ public class ScanBarCode extends AppCompatActivity {
     private ExecutorService cameraExecutor;
     private final List<String> processedBarcodes = new ArrayList<>();
     private FrameLayout feedbackOverlay;
-    private String serviceKey;
+    private String method;
+    private String activityId;
+    private PreferencesHelper preferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +75,10 @@ public class ScanBarCode extends AppCompatActivity {
         barcodeTextView = findViewById(R.id.barcodeTextView);
         previewView = findViewById(R.id.previewView);
         feedbackOverlay = findViewById(R.id.feedback_overlay);
+        preferencesHelper = new PreferencesHelper(this);
 
-        serviceKey = getIntent().getStringExtra("method");
+        method = getIntent().getStringExtra("method");
+        activityId = getIntent().getStringExtra("activity_id");
 
         cameraExecutor = new ExecutorService() {
             @Override
@@ -264,57 +256,47 @@ public class ScanBarCode extends AppCompatActivity {
         }
         processedBarcodes.add(barcodeValue);
 
-        Log.w("1response--------------------" , barcodeValue);
+//        Log.w("1response--------------------" , barcodeValue);
 
-        Call<String> call;
+        Call<Map<String , Object>> call;
         BarcodeRequest barcodeRequest = new BarcodeRequest(barcodeValue);
 
-        // انتخاب تابع مناسب بر اساس serviceKey
-        switch (serviceKey) {
-            case "registration":
-                call = WebserviceHelper.getInstancePost().registration(barcodeRequest);
-                break;
-            case "checkIn":
-                call = WebserviceHelper.getInstancePost().checkin(barcodeRequest);
-                break;
-            case "checkOut":
-                call = WebserviceHelper.getInstancePost().checkout(barcodeRequest);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + serviceKey);
-        }
-
-//        Toast.makeText(ScanBarCode.this, "barcode send" , Toast.LENGTH_LONG).show();
+        if (method.equals("registration") && activityId.isEmpty()){
+            call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , barcodeRequest);
+        }else if (method.equals("checkIn") && activityId.isEmpty()){
+            call = WebserviceHelper.getInstancePost().checkin("Bearer "+preferencesHelper.getToken() , barcodeValue);
+        }else if (method.equals("checkOut") && activityId.isEmpty()){
+            call = WebserviceHelper.getInstancePost().checkout("Bearer "+preferencesHelper.getToken() , barcodeValue);
+        }else if (method.equals("checkIn")){
+            call = WebserviceHelper.getInstancePost().activityCheckIn("Bearer "+preferencesHelper.getToken() , barcodeRequest);
+        }else if (method.equals("checkOut")){
+            call = WebserviceHelper.getInstancePost().activityCheckOut("Bearer "+preferencesHelper.getToken() , barcodeRequest);
+        }else call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , barcodeRequest);
 
 
-        new Thread(() -> {
             try {
 
-                call.enqueue(new Callback<String>() {
+                call.enqueue(new Callback<Map<String , Object>>() {
                     @Override
-                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-//                            Log.w("1response--------------------", response.body().toString());
-//                if (response.body().getSuccess()) {
-////                                pDialog.cancel();
-//                    Intent myIntent = new Intent(Login.this, verifying.class);
-//                    myIntent.putExtra("username", cell);
-//                    startActivity(myIntent);
-//                    finish();
-//                }else {
-////                                pDialog.cancel();
-                        Toast.makeText(ScanBarCode.this, "barcode send" , Toast.LENGTH_LONG).show();
-
-//                }
+                    public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
+                        if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
+                            showSuccessFeedback();
+                            if (response.body() != null && response.body().containsKey("message")){
+                                Toast.makeText(ScanBarCode.this, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
+                            }
+                        }else {
+                            if (response.body() != null && response.body().containsKey("message")){
+                                Toast.makeText(ScanBarCode.this, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
+                            }
+                        }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
                         Log.w("response", Objects.requireNonNull(t.getMessage()));
                         Toast.makeText(ScanBarCode.this, R.string.serverError , Toast.LENGTH_LONG).show();
                     }
                 });
-
-                showSuccessFeedback();
 
             } catch (Exception e) {
                 runOnUiThread(() -> {
@@ -325,7 +307,6 @@ public class ScanBarCode extends AppCompatActivity {
                     processedBarcodes.remove(barcodeValue);
                 }, 10000);
             }
-        }).start();
 
     }
 
@@ -338,13 +319,11 @@ public class ScanBarCode extends AppCompatActivity {
 
     private void showSuccessFeedback() {
         runOnUiThread(() -> {
-            // نمایش رنگ سبز
             feedbackOverlay.setVisibility(View.VISIBLE);
 
-            // مخفی کردن رنگ سبز بعد از 500 میلی‌ثانیه
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 feedbackOverlay.setVisibility(View.GONE);
-            }, 500);
+            }, 1000);
         });
     }
 

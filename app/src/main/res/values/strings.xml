@@ -10,7 +10,7 @@
     <string name="title_login">لطفا برای ورود شماره موبایل خود را وارد نمایید</string>
     <string name="title_verify">لطفا کد تایید ارسال شده را وارد کنید</string>
     <string name="serverError">مشکل برقراری ارتباط</string>
-    <string name="login_notInsertUserName">ایمیل یا شماره موبایل خود را وارد کنید</string>
+    <string name="login_notInsertUserName">شماره موبایل خود را وارد کنید</string>
     <string name="verifying_notInsertCode">کد امنیتی را وارد کنید</string>
     <string name="educating_details_textLink">برای مشاهده ویدیوی آموزشی وارد لینک زیر شوید</string>
     <string name="title_activity_main">MainActivity</string>

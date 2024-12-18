@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_registration"
+            android:title="پذیرش"/>
+
+        <item
+            android:id="@+id/nav_checkIn"
+            android:title="ثبت ورود"/>
+
+        <item
+            android:id="@+id/nav_checkOut"
+            android:title="ثبت خروج"/>
+
+        <item
+            android:id="@+id/nav_get_activities"
+            android:title="لیست فعالیت ها"/>
+
+        <item
+            android:id="@+id/nav_inquiry"
+            android:title="استعلام"/>
+
+        <item
+            android:id="@+id/nav_about_us"
+            android:title="درباره ما"/>
+    </group>
+
+            <item
+                android:id="@+id/nav_logout"
+                android:title="خروج از حساب"
+                />
+
+</menu>

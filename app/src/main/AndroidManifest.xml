@@ -5,8 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -21,10 +24,22 @@
         android:theme="@style/Theme.SamarApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.ScanBarCode"
+            android:name=".ui.Login"
+            android:exported="false" />
+        <activity
+            android:name=".ui.Verifying"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.ActivityList"
+            android:exported="false" />
+        <activity
+            android:name=".ui.ScanBarCode"
+            android:exported="false" />
+        <activity
+            android:name=".ui.Splash"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
@@ -33,8 +48,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.verifying" />
-        <activity android:name=".ui.Login" />
+
     </application>
 
 </manifest>

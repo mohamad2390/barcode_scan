@@ -31,7 +31,7 @@ public class WebserviceHelper {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(constValue.server_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
 

@@ -4,20 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.navigation.NavigationView;
 import com.tafavotco.samarapp.data.PreferencesHelper;
+import com.tafavotco.samarapp.ui.ActivityList;
 import com.tafavotco.samarapp.ui.ScanBarCode;
-import com.tafavotco.samarapp.ui.verifying;
 
 public class MainActivity extends AppCompatActivity {
 
+    DrawerLayout drawerLayout;
     private Button btn_registration;
     private Button btn_checkIn;
     private Button btn_checkOut;
@@ -32,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         init();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this , drawerLayout , toolbar , R.string.open_nav , R.string.close_nav);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
         btn_registration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,9 +68,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btn_get_activities.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(MainActivity.this, ActivityList.class);
+                startActivity(myIntent);
+            }
+        });
+
     }
 
     public void init(){
+        drawerLayout = findViewById(R.id.drawer_layout);
         btn_registration = findViewById(R.id.btn_registration);
         btn_checkIn = findViewById(R.id.btn_checkIn);
         btn_checkOut = findViewById(R.id.btn_checkOut);

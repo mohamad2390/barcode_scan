@@ -1,8 +1,6 @@
 package com.tafavotco.samarapp.model;
 
-import java.time.LocalDateTime;
-
-public class verifyResponseModel {
+public class VerifyResponseModel {
 
     private Boolean success;
     private String token;

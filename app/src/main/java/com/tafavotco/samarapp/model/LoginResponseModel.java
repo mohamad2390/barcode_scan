@@ -1,6 +1,6 @@
 package com.tafavotco.samarapp.model;
 
-public class loginResponseModel {
+public class LoginResponseModel {
 
     private Boolean success;
     private String message;
