@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tafavotco.samarapp.R;
 import com.tafavotco.samarapp.Webservice.WebserviceHelper;
 import com.tafavotco.samarapp.adapter.ActivityAdapter;
+import com.tafavotco.samarapp.adapter.EventAdapter;
 import com.tafavotco.samarapp.data.PreferencesHelper;
 import com.tafavotco.samarapp.model.ActivityModel;
+import com.tafavotco.samarapp.model.EventModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +25,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ActivityList extends AppCompatActivity {
+public class EventList extends AppCompatActivity {
 
     private RecyclerView list;
-    List<ActivityModel> data = new ArrayList<>();
-    private ActivityAdapter adapter;
+    List<EventModel> data = new ArrayList<>();
+    private EventAdapter adapter;
     PreferencesHelper preferenceshelper;
 
     @Override
@@ -37,27 +39,26 @@ public class ActivityList extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         init();
 
-        String eventHash = "nbvvn";
+        Integer page = 0;
 
-        WebserviceHelper.getInstancePost().getActivities("Bearer "+preferenceshelper.getToken() , eventHash).enqueue(new Callback<ActivityModel>() {
+        WebserviceHelper.getInstancePost().getEvents(page).enqueue(new Callback<List<EventModel>>() {
             @Override
-            public void onResponse(@NonNull Call<ActivityModel> call, @NonNull Response<ActivityModel> response) {
+            public void onResponse(@NonNull Call<List<EventModel>> call, @NonNull Response<List<EventModel>> response) {
                 Log.w("1response--------------------", response.message());
-                if (response.body().getId() != null) {
-                    data = (List<ActivityModel>) response.body();
-                    adapter = new ActivityAdapter(data , ActivityList.this);
-                    list.setLayoutManager(new LinearLayoutManager(ActivityList.this));
+                if (response.body().get(0).getId() != null) {
+                    data = (List<EventModel>) response.body();
+                    adapter = new EventAdapter(data , EventList.this);
+                    list.setLayoutManager(new LinearLayoutManager(EventList.this));
                     list.setAdapter(adapter);
                 }else {
-                    Toast.makeText(ActivityList.this, "there is no activity" , Toast.LENGTH_LONG).show();
+                    Toast.makeText(EventList.this, "there is no event" , Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ActivityModel> call, Throwable t) {
-                Log.w("response", t.getMessage());
-//                            pDialog.cancel();
-                Toast.makeText(ActivityList.this, R.string.serverError , Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Call<List<EventModel>> call, @NonNull Throwable t) {
+                Log.w("response----------------------------", t.getMessage());
+                Toast.makeText(EventList.this, R.string.serverError , Toast.LENGTH_LONG).show();
             }
         });
 

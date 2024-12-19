@@ -54,7 +54,7 @@ public class Splash extends AppCompatActivity {
                         public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
 
                             if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
-                                Intent myIntent = new Intent(Splash.this, MainActivity.class);
+                                Intent myIntent = new Intent(Splash.this, EventList.class);
                                 startActivity(myIntent);
                                 finish();
                             }else {

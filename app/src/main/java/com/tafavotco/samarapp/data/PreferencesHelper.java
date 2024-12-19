@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class PreferencesHelper {
 
-    public SharedPreferences myPref , userName, Token;
+    public SharedPreferences myPref , userName, Token , Event;
     public static final String name_category="name_category";
     public static final String key_category="key_category";
 
@@ -14,6 +14,7 @@ public class PreferencesHelper {
         myPref = context.getSharedPreferences(name_category , Context.MODE_PRIVATE);
         userName = context.getSharedPreferences("userName" , Context.MODE_PRIVATE);
         Token = context.getSharedPreferences("Token" , Context.MODE_PRIVATE);
+        Event = context.getSharedPreferences("Event" , Context.MODE_PRIVATE);
     }
 
     public String getName_category(){
@@ -38,6 +39,14 @@ public class PreferencesHelper {
 
     public void setToken(String token){
         Token.edit().putString("token" , token).apply();
+    }
+
+    public String getEvent(){
+        return Event.getString("event" , "null");
+    }
+
+    public void setEvent(String event){
+        Event.edit().putString("event" , event).apply();
     }
 
 }
