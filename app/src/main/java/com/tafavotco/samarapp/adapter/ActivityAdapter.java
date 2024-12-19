@@ -2,7 +2,7 @@ package com.tafavotco.samarapp.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tafavotco.samarapp.R;
 import com.tafavotco.samarapp.model.ActivityModel;
-import com.tafavotco.samarapp.ui.ScanBarCode;
+import com.tafavotco.samarapp.ui.ScanBarCodeFragment;
 
 import java.util.List;
 
@@ -47,20 +50,46 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         holder.btn_activity_checkIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(context , ScanBarCode.class);
-                myIntent.putExtra("activity_id" , data.get(position).getId());
-                myIntent.putExtra("method" , "checkIn");
-                context.startActivity(myIntent);
+
+                Fragment fragment = new ScanBarCodeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("activity_id", data.get(position).getId());
+                bundle.putString("method", "checkIn");
+                fragment.setArguments(bundle);
+//                replaceFragment(fragment);
+
+                FragmentManager fragmentManager = fragment.getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.commit();
+
+//                Intent myIntent = new Intent(context , ScanBarCode.class);
+//                myIntent.putExtra("activity_id" , data.get(position).getId());
+//                myIntent.putExtra("method" , "checkIn");
+//                context.startActivity(myIntent);
             }
         });
 
         holder.btn_activity_checkOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(context , ScanBarCode.class);
-                myIntent.putExtra("activity_id" , data.get(position).getId());
-                myIntent.putExtra("method" , "checkOut");
-                context.startActivity(myIntent);
+
+                Fragment fragment = new ScanBarCodeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("activity_id", data.get(position).getId());
+                bundle.putString("method", "checkOut");
+                fragment.setArguments(bundle);
+//                replaceFragment(fragment);
+
+                FragmentManager fragmentManager = fragment.getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.commit();
+
+//                Intent myIntent = new Intent(context , ScanBarCode.class);
+//                myIntent.putExtra("activity_id" , data.get(position).getId());
+//                myIntent.putExtra("method" , "checkOut");
+//                context.startActivity(myIntent);
             }
         });
     }

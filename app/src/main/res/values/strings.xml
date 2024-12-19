@@ -50,5 +50,7 @@
     <string name="s_trouser_length">ارتفاع کمر تا مچ</string>
     <string name="s_wrist_circ">دور مچ</string>
     <string name="s_hip_depth">ارتفاع فاق</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

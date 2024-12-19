@@ -2,7 +2,6 @@ package com.tafavotco.samarapp.Webservice;
 
 import com.tafavotco.samarapp.model.ActivityModel;
 import com.tafavotco.samarapp.ui.Login;
-import com.tafavotco.samarapp.ui.ScanBarCode;
 import com.tafavotco.samarapp.ui.Verifying;
 
 import java.util.Map;
@@ -26,7 +25,7 @@ public interface API {
     Call<Map<String , Object>> sendCode(@Body Login.requestCode requestCodes);
 
     @POST("events/registration")
-    Call<Map<String , Object>> registration(@Header("authorization") String token , @Body ScanBarCode.BarcodeRequest barcodeValue);
+    Call<Map<String , Object>> registration(@Header("authorization") String token , @Path("participationHash") String participationHash);
 
     @POST("panel/participants/check-in/{participationHash}")
     Call<Map<String , Object>> checkin(@Header("authorization") String token , @Path("participationHash") String participationHash);
@@ -38,9 +37,9 @@ public interface API {
     Call<ActivityModel> getActivities(@Header("authorization") String token , @Path("eventHash") String eventHash);
 
     @POST("activities/checkout")
-    Call<Map<String , Object>> activityCheckIn(@Header("authorization") String token , @Body ScanBarCode.BarcodeRequest barcodeValue);
+    Call<Map<String , Object>> activityCheckIn(@Header("authorization") String token , @Path("participationHash") String participationHash);
 
     @POST("activities/checkout")
-    Call<Map<String , Object>> activityCheckOut(@Header("authorization") String token , @Body ScanBarCode.BarcodeRequest barcodeValue);
+    Call<Map<String , Object>> activityCheckOut(@Header("authorization") String token , @Path("participationHash") String participationHash);
 
 }
