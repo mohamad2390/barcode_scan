@@ -72,7 +72,6 @@ public class ScanBarCode extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_scan_bar_code);
 
-        barcodeTextView = findViewById(R.id.barcodeTextView);
         previewView = findViewById(R.id.previewView);
         feedbackOverlay = findViewById(R.id.feedback_overlay);
         preferencesHelper = new PreferencesHelper(this);

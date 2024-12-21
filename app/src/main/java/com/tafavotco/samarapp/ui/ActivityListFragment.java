@@ -53,13 +53,13 @@ public class ActivityListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         init(view);
 
-        String eventHash = "nbvvn";
+        String eventHash = preferenceshelper.getEvent();
 
-        WebserviceHelper.getInstancePost().getActivities("Bearer "+preferenceshelper.getToken() , eventHash).enqueue(new Callback<ActivityModel>() {
+        WebserviceHelper.getInstancePost().getActivities("Bearer "+preferenceshelper.getToken() , eventHash).enqueue(new Callback<List<ActivityModel>>() {
             @Override
-            public void onResponse(@NonNull Call<ActivityModel> call, @NonNull Response<ActivityModel> response) {
+            public void onResponse(@NonNull Call<List<ActivityModel>> call, @NonNull Response<List<ActivityModel>> response) {
                 Log.w("1response--------------------", response.message());
-                if (response.body().getId() != null) {
+                if (response.body().get(0).getId() != null) {
                     data = (List<ActivityModel>) response.body();
                     adapter = new ActivityAdapter(data , context);
                     list.setLayoutManager(new LinearLayoutManager(context));
@@ -70,8 +70,8 @@ public class ActivityListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ActivityModel> call, Throwable t) {
-                Log.w("response", t.getMessage());
+            public void onFailure(@NonNull Call<List<ActivityModel>> call, @NonNull Throwable t) {
+                Log.w("response222221111111111", t.getMessage());
                 Toast.makeText(context, R.string.serverError , Toast.LENGTH_LONG).show();
             }
         });

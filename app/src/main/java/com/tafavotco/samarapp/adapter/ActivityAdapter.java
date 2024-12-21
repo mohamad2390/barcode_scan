@@ -37,7 +37,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
     @Override
     public ActivityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view =mInflater.inflate(R.layout.item_list_activity, parent , false);
-
         return new ViewHolder(view);
     }
 
@@ -53,10 +52,13 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
                 Fragment fragment = new ScanBarCodeFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("activity_id", data.get(position).getId());
-                bundle.putString("method", "checkIn");
+                Bundle bundle_method = new Bundle();
+                Bundle bundle_activity_id = new Bundle();
+                bundle_method.putString("method", "checkIn");
+                bundle_activity_id.putString("activity_id", data.get(position).getId());
+                bundle.putBundle("bundle_method",bundle_method);
+                bundle.putBundle("bundle_activity_id",bundle_activity_id);
                 fragment.setArguments(bundle);
-//                replaceFragment(fragment);
 
                 FragmentManager fragmentManager = fragment.getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -76,10 +78,13 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
                 Fragment fragment = new ScanBarCodeFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("activity_id", data.get(position).getId());
-                bundle.putString("method", "checkOut");
+                Bundle bundle_method = new Bundle();
+                Bundle bundle_activity_id = new Bundle();
+                bundle_method.putString("method", "checkOut");
+                bundle_activity_id.putString("activity_id", data.get(position).getId());
+                bundle.putBundle("bundle_method",bundle_method);
+                bundle.putBundle("bundle_activity_id",bundle_activity_id);
                 fragment.setArguments(bundle);
-//                replaceFragment(fragment);
 
                 FragmentManager fragmentManager = fragment.getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

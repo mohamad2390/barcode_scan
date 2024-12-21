@@ -61,13 +61,14 @@ public class Login extends AppCompatActivity {
                             }else {
                                 if (response.body() != null && response.body().containsKey("message")){
                                     Toast.makeText(Login.this, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
+                                    progressBar.setVisibility(View.GONE);
                                 }
                             }
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
-
+                            progressBar.setVisibility(View.GONE);
                             Log.w("response", Objects.requireNonNull(t.getMessage()));
                             Toast.makeText(Login.this, R.string.serverError , Toast.LENGTH_LONG).show();
                         }

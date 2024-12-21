@@ -1,9 +1,11 @@
 package com.tafavotco.samarapp.Webservice;
 
 import com.tafavotco.samarapp.model.ActivityModel;
+import com.tafavotco.samarapp.model.EventModel;
 import com.tafavotco.samarapp.ui.Login;
 import com.tafavotco.samarapp.ui.Verifying;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -34,7 +36,10 @@ public interface API {
     Call<Map<String , Object>> checkout(@Header("authorization") String token , @Path("participationHash") String participationHash);
 
     @GET("panel/activities/all/{eventHash}")
-    Call<ActivityModel> getActivities(@Header("authorization") String token , @Path("eventHash") String eventHash);
+    Call<List<ActivityModel>> getActivities(@Header("authorization") String token , @Path("eventHash") String eventHash);
+
+    @GET("events/all/{page}")
+    Call<List<EventModel>> getEvents(@Path("page") Integer page);
 
     @POST("activities/checkout")
     Call<Map<String , Object>> activityCheckIn(@Header("authorization") String token , @Path("participationHash") String participationHash);

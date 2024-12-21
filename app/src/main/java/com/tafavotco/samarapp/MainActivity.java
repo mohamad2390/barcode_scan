@@ -57,19 +57,34 @@ public class MainActivity extends AppCompatActivity {
                 if (id == R.id.nav_registration) {
                     Fragment fragment = new ScanBarCodeFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("method", "registration");
+                    Bundle bundle_method = new Bundle();
+                    Bundle bundle_activity_id = new Bundle();
+                    bundle_method.putString("method", "registration");
+                    bundle_activity_id.putString("activity_id", "");
+                    bundle.putBundle("bundle_method",bundle_method);
+                    bundle.putBundle("bundle_activity_id",bundle_activity_id);
                     fragment.setArguments(bundle);
                     replaceFragment(fragment);
                 } else if (id == R.id.nav_checkIn) {
                     Fragment fragment = new ScanBarCodeFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("method", "checkIn");
+                    Bundle bundle_method = new Bundle();
+                    Bundle bundle_activity_id = new Bundle();
+                    bundle_method.putString("method", "checkIn");
+                    bundle_activity_id.putString("activity_id", "");
+                    bundle.putBundle("bundle_method",bundle_method);
+                    bundle.putBundle("bundle_activity_id",bundle_activity_id);
                     fragment.setArguments(bundle);
                     replaceFragment(fragment);
                 } else if (id == R.id.nav_checkOut) {
                     Fragment fragment = new ScanBarCodeFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("method", "checkOut");
+                    Bundle bundle_method = new Bundle();
+                    Bundle bundle_activity_id = new Bundle();
+                    bundle_method.putString("method", "checkOut");
+                    bundle_activity_id.putString("activity_id", "");
+                    bundle.putBundle("bundle_method",bundle_method);
+                    bundle.putBundle("bundle_activity_id",bundle_activity_id);
                     fragment.setArguments(bundle);
                     replaceFragment(fragment);
                 } else if (id == R.id.nav_get_activities) {

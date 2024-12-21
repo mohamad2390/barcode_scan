@@ -66,17 +66,22 @@ public class Verifying extends AppCompatActivity {
                                 preferencesHelper.setToken(Objects.requireNonNull(response.body().get("token")).toString());
                                 if (response.body().get("role").equals("ORGANIZER")){
                                     progressBar.setVisibility(View.GONE);
-                                    Intent myIntent = new Intent(Verifying.this, MainActivity.class);
+                                    Intent myIntent = new Intent(Verifying.this, EventList.class);
                                     startActivity(myIntent);
                                     finish();
-                                }else Toast.makeText(Verifying.this, "you are not a organizer" , Toast.LENGTH_LONG).show();
+                                }else{
+                                    Toast.makeText(Verifying.this, "you are not a organizer" , Toast.LENGTH_LONG).show();
+                                    progressBar.setVisibility(View.GONE);
+                                }
                             } else {
                                 Toast.makeText(Verifying.this, "some thing went rung" , Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
                             }
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
+                            progressBar.setVisibility(View.GONE);
                             Log.w("response", Objects.requireNonNull(t.getMessage()));
                             Toast.makeText(Verifying.this, R.string.serverError , Toast.LENGTH_LONG).show();
                         }

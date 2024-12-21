@@ -33,7 +33,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.ActivityList"
+            android:name=".ui.EventList"
             android:exported="false" />
         <activity
             android:name=".ui.ScanBarCode"
