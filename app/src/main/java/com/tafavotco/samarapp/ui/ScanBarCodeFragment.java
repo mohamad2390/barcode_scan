@@ -3,7 +3,6 @@ package com.tafavotco.samarapp.ui;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,20 +44,17 @@ import java.util.concurrent.Executors;
 
 public class ScanBarCodeFragment extends Fragment {
 
-    private TextView barcodeTextView;
     private PreviewView previewView;
     private ExecutorService cameraExecutor;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private final List<String> processedBarcodes = new ArrayList<>();
-    private FrameLayout feedbackOverlay;
     private String method;
     private String activityHash;
     private PreferencesHelper preferencesHelper;
     private Context context;
     private EditText edit_txt_phone;
     private Button send;
-    private ImageView person_avatar;
-    private TextView txt_fName , txt_lName , txt_national_code , activity_title;
+    private TextView  activity_title;
     CustomDialog customDialog;
 
     @Override
@@ -83,17 +77,12 @@ public class ScanBarCodeFragment extends Fragment {
 
         cameraExecutor = Executors.newSingleThreadExecutor();
 
-//        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
-//        }
-
         if (!Objects.equals(preferencesHelper.getActivityTitle(), "")){
             activity_title.setText(preferencesHelper.getActivityTitle());
         }else activity_title.setText("فعالیتی انتخاب نشده است");
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-//            startCamera();
+
         } else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 1);
         }
@@ -124,72 +113,6 @@ public class ScanBarCodeFragment extends Fragment {
             }
         }, ContextCompat.getMainExecutor(requireContext()));
 
-//        cameraExecutor = new ExecutorService() {
-//            @Override
-//            public void execute(Runnable runnable) {
-//
-//            }
-//
-//            @Override
-//            public void shutdown() {
-//
-//            }
-//
-//            @Override
-//            public List<Runnable> shutdownNow() {
-//                return Collections.emptyList();
-//            }
-//
-//            @Override
-//            public boolean isShutdown() {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean isTerminated() {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean awaitTermination(long l, TimeUnit timeUnit) throws InterruptedException {
-//                return false;
-//            }
-//
-//            @Override
-//            public <T> Future<T> submit(Callable<T> callable) {
-//                return null;
-//            }
-//
-//            @Override
-//            public <T> Future<T> submit(Runnable runnable, T t) {
-//                return null;
-//            }
-//
-//            @Override
-//            public Future<?> submit(Runnable runnable) {
-//                return null;
-//            }
-//
-//            @Override
-//            public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> collection) throws InterruptedException {
-//                return Collections.emptyList();
-//            }
-//
-//            @Override
-//            public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> collection, long l, TimeUnit timeUnit) throws InterruptedException {
-//                return Collections.emptyList();
-//            }
-//
-//            @Override
-//            public <T> T invokeAny(Collection<? extends Callable<T>> collection) throws ExecutionException, InterruptedException {
-//                return null;
-//            }
-//
-//            @Override
-//            public <T> T invokeAny(Collection<? extends Callable<T>> collection, long l, TimeUnit timeUnit) throws ExecutionException, InterruptedException, TimeoutException {
-//                return null;
-//            }
-//        };
 
     }
 
@@ -226,68 +149,6 @@ public class ScanBarCodeFragment extends Fragment {
         }
     }
 
-//    private void startCamera() {
-//        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(context);
-//        cameraProviderFuture.addListener(() -> {
-//            try {
-//                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-//
-//                // تنظیم پیش‌نمایش دوربین
-//                Preview preview = new Preview.Builder().build();
-//                preview.setSurfaceProvider(previewView.getSurfaceProvider());
-//
-//                // تنظیم تحلیل تصویر برای اسکن بارکد
-//                ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-//                        .setTargetResolution(new Size(1280, 720))
-//                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-//                        .build();
-//
-//                imageAnalysis.setAnalyzer(cameraExecutor, imageProxy -> {
-//                    @OptIn(markerClass = ExperimentalGetImage.class)
-//                    Image mediaImage = imageProxy.getImage();
-//                    if (mediaImage != null) {
-//                        InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
-//                        BarcodeScanner scanner = BarcodeScanning.getClient();
-//                        scanner.process(image)
-//                                .addOnSuccessListener(barcodes -> {
-//                                    for (Barcode barcode : barcodes) {
-//                                        String rawValue = barcode.getRawValue();
-//
-//                                        if (rawValue != null) {
-//                                            // ارسال بارکد به وب‌سرویس
-//                                            sendBarcodeToWebService(rawValue);
-//                                        }
-//
-//                                        break; // فقط اولین بارکد پردازش شود
-//                                    }
-//                                })
-//                                .addOnFailureListener(e -> barcodeTextView.setText("Error: " + e.getMessage()))
-//                                .addOnCompleteListener(task -> imageProxy.close());
-//                    }
-//                });
-//
-//                // اتصال دوربین به لایف‌سایکل
-//                CameraSelector cameraSelector = new CameraSelector.Builder()
-//                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-//                        .build();
-//
-//                cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }, ContextCompat.getMainExecutor(context));
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == 1001 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            startCamera();
-//        } else {
-//            barcodeTextView.setText("Camera permission required");
-//        }
-//    }
 
     @Override
     public void onDestroyView() {
@@ -318,88 +179,17 @@ public class ScanBarCodeFragment extends Fragment {
 
         ParticipantHashRequest participantHashRequest = new ParticipantHashRequest(preferencesHelper.getEventHash() , activityHash , participationHash);
         customDialog.showBottomDialog(participantHashRequest , method , activityHash);
-//
-//        Log.w("response2" , participationHash);
-
-//        Call<Map<String , Object>> call;
-//
-//        if (method.equals("registration") && activityHash.isEmpty()){
-//            call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , participationHash);
-//        }else if (method.equals("checkIn") && activityHash.isEmpty()){
-//            call = WebserviceHelper.getInstancePost().checkin("Bearer "+preferencesHelper.getToken() , participationHash);
-//        }else if (method.equals("checkOut") && activityHash.isEmpty()){
-//            call = WebserviceHelper.getInstancePost().checkout("Bearer "+preferencesHelper.getToken() , participationHash);
-//        }else if (method.equals("checkIn")){
-//            call = WebserviceHelper.getInstancePost().activityCheckIn("Bearer "+preferencesHelper.getToken() , activityHash, participationHash);
-//        }else if (method.equals("checkOut")){
-//            call = WebserviceHelper.getInstancePost().activityCheckOut("Bearer "+preferencesHelper.getToken() , activityHash, participationHash);
-//        }else call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , participationHash);
-//
-//
-//        try {
-//
-//            call.enqueue(new Callback<Map<String , Object>>() {
-//                @Override
-//                public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
-//                    if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
-//                        showSuccessFeedback();
-//                        if (response.body() != null && response.body().containsKey("warningMessage")){
-//                            Toast.makeText(context, Objects.requireNonNull(response.body().get("warningMessage")).toString() , Toast.LENGTH_LONG).show();
-//                        }
-//                    }else {
-//                        showFiledFeedback();
-//                        if (response.body() != null && response.body().containsKey("warningMessage")){
-//                            Toast.makeText(context, Objects.requireNonNull(response.body().get("warningMessage")).toString() , Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
-//                    Log.w("response1", Objects.requireNonNull(t.getMessage()));
-//                    Toast.makeText(context, R.string.serverError , Toast.LENGTH_LONG).show();
-//                }
-//            });
-//
-//        } catch (Exception e) {
-//            getActivity().runOnUiThread(() -> {
-//                barcodeTextView.setText("Error: " + e.getMessage());
-//            });
-//        } finally {
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                processedBarcodes.remove(participationHash);
-            }, 4000);
-//        }
-
-    }
-
-    private void showSuccessFeedback() {
-        feedbackOverlay.setBackgroundColor(Color.GREEN);
-            feedbackOverlay.setVisibility(View.VISIBLE);
-
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                feedbackOverlay.setVisibility(View.GONE);
-            }, 1000);
-    }
-
-    private void showFiledFeedback() {
-        feedbackOverlay.setBackgroundColor(Color.RED);
-        feedbackOverlay.setVisibility(View.VISIBLE);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            feedbackOverlay.setVisibility(View.GONE);
-        }, 1000);
+                processedBarcodes.remove(participationHash);
+                }, 4000);
+
     }
 
     private void init(View v) {
         edit_txt_phone = v.findViewById(R.id.edit_txt_phone);
         send = v.findViewById(R.id.btn_send);
-        person_avatar = v.findViewById(R.id.img_person_avatar);
-        txt_fName = v.findViewById(R.id.txt_fName);
-        txt_lName = v.findViewById(R.id.txt_lName);
-        txt_national_code = v.findViewById(R.id.txt_national_code);
         previewView = v.findViewById(R.id.previewView);
-        feedbackOverlay = v.findViewById(R.id.feedback_overlay);
         activity_title = v.findViewById(R.id.txt_activity_title_global);
         preferencesHelper = new PreferencesHelper(context);
         customDialog = new CustomDialog(context,preferencesHelper);

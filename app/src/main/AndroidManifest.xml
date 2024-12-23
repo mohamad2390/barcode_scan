@@ -36,9 +36,6 @@
             android:name=".ui.EventList"
             android:exported="false" />
         <activity
-            android:name=".ui.ScanBarCode"
-            android:exported="false" />
-        <activity
             android:name=".ui.Splash"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
