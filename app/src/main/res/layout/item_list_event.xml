@@ -5,18 +5,21 @@
     android:id="@+id/item_event"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginBottom="10dp"
-    android:background="@drawable/txt_backgrund"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/item_list_event_background"
+    android:elevation="@dimen/item_list_shadow"
     >
 
     <ImageView
         android:id="@+id/image_event_cover"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
+        android:layout_height="200dp"
+        android:background="@drawable/image_shape"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,24 +29,16 @@
         android:id="@+id/txt_event_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:layout_marginEnd="16dp"
         android:textColor="@color/black"
         android:textSize="18sp"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_event_cover" />
-
-    <TextView
-        android:id="@+id/txt_event_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textColor="@color/black"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_event_title" />
 
     <TextView
         android:id="@+id/txt_event_time"
@@ -51,10 +46,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:paddingRight="10sp"
         android:textColor="@color/black"
-        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_event_description" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_event_title" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,8 @@ package com.tafavotco.samarapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -17,8 +18,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.tafavotco.samarapp.data.PreferencesHelper;
+import com.tafavotco.samarapp.ui.AboutUsFragment;
 import com.tafavotco.samarapp.ui.ActivityListFragment;
 import com.tafavotco.samarapp.ui.HomeFragment;
+import com.tafavotco.samarapp.ui.InquiryFragment;
 import com.tafavotco.samarapp.ui.Login;
 import com.tafavotco.samarapp.ui.ScanBarCodeFragment;
 
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     PreferencesHelper preferencesHelper;
     NavigationView navigationView;
+    TextView event_title , headerNavPhone ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
 
-//        NavigationView navigationView = findViewById(R.id.nav_view);
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -43,9 +46,12 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-//        if (savedInstanceState == null){
-//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container , new HomeFragment()).commit();
-//        }
+        event_title.setText(preferencesHelper.getEventTitle());
+
+        View headerView = navigationView.getHeaderView(0);
+
+        headerNavPhone = headerView.findViewById(R.id.header_nav_phone);
+        headerNavPhone.setText(preferencesHelper.getUsername());
 
         replaceFragment(new HomeFragment());
 
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if (id == R.id.nav_registration) {
+                    preferencesHelper.setActivityTitle("");
                     Fragment fragment = new ScanBarCodeFragment();
                     Bundle bundle = new Bundle();
                     Bundle bundle_method = new Bundle();
@@ -66,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment.setArguments(bundle);
                     replaceFragment(fragment);
                 } else if (id == R.id.nav_checkIn) {
+                    preferencesHelper.setActivityTitle("");
                     Fragment fragment = new ScanBarCodeFragment();
                     Bundle bundle = new Bundle();
                     Bundle bundle_method = new Bundle();
@@ -77,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment.setArguments(bundle);
                     replaceFragment(fragment);
                 } else if (id == R.id.nav_checkOut) {
+                    preferencesHelper.setActivityTitle("");
                     Fragment fragment = new ScanBarCodeFragment();
                     Bundle bundle = new Bundle();
                     Bundle bundle_method = new Bundle();
@@ -91,9 +100,13 @@ public class MainActivity extends AppCompatActivity {
                     Fragment fragment = new ActivityListFragment();
                     replaceFragment(fragment);
                 } else if (id == R.id.nav_inquiry) {
-                    Toast.makeText(MainActivity.this, "هنوز درست نشده", Toast.LENGTH_SHORT).show();
+                    preferencesHelper.setActivityTitle("");
+                    Fragment fragment = new InquiryFragment();
+                    replaceFragment(fragment);
                 } else if (id == R.id.nav_about_us) {
-                    Toast.makeText(MainActivity.this, "هنوز درست نشده", Toast.LENGTH_SHORT).show();
+                    preferencesHelper.setActivityTitle("");
+                    Fragment fragment = new AboutUsFragment();
+                    replaceFragment(fragment);
                 } else if (id == R.id.nav_logout) {
                     preferencesHelper.setToken(null);
                     Intent myIntent = new Intent(MainActivity.this , Login.class);
@@ -121,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         preferencesHelper = new PreferencesHelper(MainActivity.this);
+        event_title = findViewById(R.id.txt_event_title_global);
+//        activity_title = findViewById(R.id.txt_activity_title_global);
+//        header_nav_phone = findViewById(R.id.header_navigation_drawer.header_nav_phone);
     }
 
 }

@@ -1,12 +1,9 @@
 package com.tafavotco.samarapp.model;
 
-import java.time.LocalDateTime;
-
 public class ActivityModel {
     private String id;
     private String title;
-    private String sex;
-    private LocalDateTime time;
+    private String time;
 
     public String getId() {
         return id;
@@ -24,19 +21,12 @@ public class ActivityModel {
         this.title = title;
     }
 
-    public String getSex() {
-        return sex;
-    }
 
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public LocalDateTime getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }

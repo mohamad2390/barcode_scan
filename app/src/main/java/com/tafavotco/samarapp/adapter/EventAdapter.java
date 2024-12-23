@@ -19,19 +19,17 @@ import com.bumptech.glide.Glide;
 import com.tafavotco.samarapp.MainActivity;
 import com.tafavotco.samarapp.R;
 import com.tafavotco.samarapp.data.PreferencesHelper;
-import com.tafavotco.samarapp.model.ActivityModel;
-import com.tafavotco.samarapp.model.EventModel;
-import com.tafavotco.samarapp.ui.Verifying;
 
 import java.util.List;
+import java.util.Map;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
-    private List<EventModel> data;
+    private List<Map<String , Object>> data;
     private LayoutInflater mInflater;
     Context context;
 
-    public EventAdapter(List<EventModel> data, Context context) {
+    public EventAdapter(List<Map<String , Object>> data, Context context) {
         this.data = data;
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
@@ -47,20 +45,31 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull EventAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        holder.item_txt_event_title.setText(data.get(position).getTitle());
-        holder.item_txt_event_description.setText(data.get(position).getDescription());
-        holder.item_txt_event_time.setText(data.get(position).getStartDate().toString());
+        if (data.get(position).containsKey("title")){
+            holder.item_txt_event_title.setText(data.get(position).get("title").toString());
+        }
+        if (data.get(position).containsKey("startDate")){
+            holder.item_txt_event_time.setText(data.get(position).get("startDate").toString());
+        }
+        String id="";
+        if (data.get(position).containsKey("id")){
+            id = data.get(position).get("id").toString();
+        }
 
         Glide.with(context)
-                .load(server_URL+"events/cover/"+data.get(position).getId())
+                .load(server_URL+"events/cover/"+id)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(holder.item_image_event_cover);
 
+        String finalId = id;
         holder.item_event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PreferencesHelper preferencesHelper = new PreferencesHelper(context);
-                preferencesHelper.setEvent(data.get(position).getId());
+                preferencesHelper.setEventHash(finalId);
+                if (data.get(position).containsKey("title")){
+                    preferencesHelper.setEventTitle(data.get(position).get("title").toString());
+                }
                 Intent myIntent = new Intent(context , MainActivity.class);
                 context.startActivity(myIntent);
             }
@@ -77,14 +86,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         public ConstraintLayout item_event;
         public ImageView item_image_event_cover;
         public TextView item_txt_event_title;
-        public TextView item_txt_event_description;
         public TextView item_txt_event_time;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             item_event =itemView.findViewById(R.id.item_event);
             item_image_event_cover = itemView.findViewById(R.id.image_event_cover);
             item_txt_event_title = itemView.findViewById(R.id.txt_event_title);
-            item_txt_event_description = itemView.findViewById(R.id.txt_event_description);
             item_txt_event_time = itemView.findViewById(R.id.txt_event_time);
         }
     }

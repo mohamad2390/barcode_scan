@@ -7,49 +7,23 @@
     <string name="title_food">غذا</string>
     <string name="open_nav">open nav</string>
     <string name="close_nav">close nav</string>
-    <string name="title_login">لطفا برای ورود شماره موبایل خود را وارد نمایید</string>
+    <string name="title_login">شماره موبایل خود را وارد نمایید</string>
     <string name="title_verify">لطفا کد تایید ارسال شده را وارد کنید</string>
     <string name="serverError">مشکل برقراری ارتباط</string>
     <string name="login_notInsertUserName">شماره موبایل خود را وارد کنید</string>
+    <string name="login_hint_text">شماره موبایل</string>
+    <string name="txt_send">ارسال</string>
+    <string name="txt_code">کد ورود به سیستم</string>
+    <string name="txt_enter">ورود</string>
     <string name="verifying_notInsertCode">کد امنیتی را وارد کنید</string>
-    <string name="educating_details_textLink">برای مشاهده ویدیوی آموزشی وارد لینک زیر شوید</string>
+    <string name="about_us">ساخته شده در شرکت مهندسی تفاوت</string>
+    <string name="link">tafavotco.com</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">سایز</string>
-    <string name="title_dashboard">پروفایل</string>
-    <string name="title_notifications">آموزش</string>
-    <string name="title_activity_main2">MainActivity2</string>
-    <string name="txt_unit">cm</string>
-    <string name="txt_neck">دور گردن</string>
-    <string name="txt_shoulder">عرض شانه</string>
-    <string name="txt_chest">دور سینه</string>
-    <string name="txt_arm">دور بازو</string>
-    <string name="txt_stomach">دور شکم</string>
-    <string name="txt_belt">دور کمر</string>
-    <string name="txt_thigh">دور ران</string>
-    <string name="txt_heightsFromBelt">ارتفاع کمر تا زمین</string>
-    <string name="txt_heightsFromShoulderToBelt">ارتفاع سر شانه تا کمر</string>
-    <string name="txt_heightsFromTop">قد</string>
+
     <string name="btn_edit_size">ویرایش اطلاعات</string>
     <string name="error_null">مقدار نمیتواند خالی باشد</string>
     <string name="success_edit_user">اطلاعات با موفقیت به روزرسانی شد</string>
 
-    <string name="s_neck_circ">دور گردن</string>
-    <string name="s_chest_circ">دور بالای سینه</string>
-    <string name="s_bust_circ">دور روی سینه</string>
-    <string name="s_waist_circ">دور کمر</string>
-    <string name="s_hip_circ">دور باسن</string>
-    <string name="s_bust_height">ارتفاع سینه</string>
-    <string name="s_breast_distance">فاصله نوک سینه ها</string>
-    <string name="s_back_waist_length">ارتفاع کمر از پشت</string>
-    <string name="s_front_waist_length">ارتفاع کمر از جلو</string>
-    <string name="s_back_width">عرض کمر از پشت</string>
-    <string name="s_back_shoulder_width">عرض شانه از پشت</string>
-    <string name="s_elbow_length">ارتفاع شانه تا آرنج</string>
-    <string name="s_sleeve_length">ارتفاع شانه تا مچ</string>
-    <string name="s_knee_length">ارتفاع کمر تا زانو</string>
-    <string name="s_trouser_length">ارتفاع کمر تا مچ</string>
-    <string name="s_wrist_circ">دور مچ</string>
-    <string name="s_hip_depth">ارتفاع فاق</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

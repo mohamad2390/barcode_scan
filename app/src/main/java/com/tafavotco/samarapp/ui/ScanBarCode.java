@@ -6,12 +6,10 @@ import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.util.Size;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -33,26 +31,18 @@ import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.tafavotco.samarapp.R;
-import com.tafavotco.samarapp.Webservice.WebserviceHelper;
 import com.tafavotco.samarapp.data.PreferencesHelper;
-import com.tafavotco.samarapp.utils.Convert;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class ScanBarCode extends AppCompatActivity {
@@ -250,63 +240,63 @@ public class ScanBarCode extends AppCompatActivity {
     }
 
     private void sendBarcodeToWebService(String barcodeValue) {
-        if (processedBarcodes.contains(barcodeValue)) {
-            return;
-        }
-        processedBarcodes.add(barcodeValue);
-
-//        Log.w("1response--------------------" , barcodeValue);
-
-        Call<Map<String , Object>> call;
-        BarcodeRequest barcodeRequest = new BarcodeRequest(barcodeValue);
-
-//        if (method.equals("registration") && activityId.isEmpty()){
-//            call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , barcodeRequest);
-//        }else if (method.equals("checkIn") && activityId.isEmpty()){
-//            call = WebserviceHelper.getInstancePost().checkin("Bearer "+preferencesHelper.getToken() , barcodeValue);
-//        }else if (method.equals("checkOut") && activityId.isEmpty()){
-//            call = WebserviceHelper.getInstancePost().checkout("Bearer "+preferencesHelper.getToken() , barcodeValue);
-//        }else if (method.equals("checkIn")){
-//            call = WebserviceHelper.getInstancePost().activityCheckIn("Bearer "+preferencesHelper.getToken() , barcodeRequest);
-//        }else if (method.equals("checkOut")){
-//            call = WebserviceHelper.getInstancePost().activityCheckOut("Bearer "+preferencesHelper.getToken() , barcodeRequest);
-//        }else call =
-        call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , barcodeValue);
-
-
-            try {
-
-                call.enqueue(new Callback<Map<String , Object>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
-                        if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
-                            showSuccessFeedback();
-                            if (response.body() != null && response.body().containsKey("message")){
-                                Toast.makeText(ScanBarCode.this, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
-                            }
-                        }else {
-                            if (response.body() != null && response.body().containsKey("message")){
-                                Toast.makeText(ScanBarCode.this, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
-                        Log.w("response", Objects.requireNonNull(t.getMessage()));
-                        Toast.makeText(ScanBarCode.this, R.string.serverError , Toast.LENGTH_LONG).show();
-                    }
-                });
-
-            } catch (Exception e) {
-                runOnUiThread(() -> {
-                    barcodeTextView.setText("Error: " + e.getMessage());
-                });
-            } finally {
-                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    processedBarcodes.remove(barcodeValue);
-                }, 10000);
-            }
+//        if (processedBarcodes.contains(barcodeValue)) {
+//            return;
+//        }
+//        processedBarcodes.add(barcodeValue);
+//
+////        Log.w("1response--------------------" , barcodeValue);
+//
+//        Call<Map<String , Object>> call;
+//        BarcodeRequest barcodeRequest = new BarcodeRequest(barcodeValue);
+//
+////        if (method.equals("registration") && activityId.isEmpty()){
+////            call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , barcodeRequest);
+////        }else if (method.equals("checkIn") && activityId.isEmpty()){
+////            call = WebserviceHelper.getInstancePost().checkin("Bearer "+preferencesHelper.getToken() , barcodeValue);
+////        }else if (method.equals("checkOut") && activityId.isEmpty()){
+////            call = WebserviceHelper.getInstancePost().checkout("Bearer "+preferencesHelper.getToken() , barcodeValue);
+////        }else if (method.equals("checkIn")){
+////            call = WebserviceHelper.getInstancePost().activityCheckIn("Bearer "+preferencesHelper.getToken() , barcodeRequest);
+////        }else if (method.equals("checkOut")){
+////            call = WebserviceHelper.getInstancePost().activityCheckOut("Bearer "+preferencesHelper.getToken() , barcodeRequest);
+////        }else call =
+////        call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , barcodeValue);
+//
+//
+//            try {
+//
+//                call.enqueue(new Callback<Map<String , Object>>() {
+//                    @Override
+//                    public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
+//                        if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
+//                            showSuccessFeedback();
+//                            if (response.body() != null && response.body().containsKey("message")){
+//                                Toast.makeText(ScanBarCode.this, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
+//                            }
+//                        }else {
+//                            if (response.body() != null && response.body().containsKey("message")){
+//                                Toast.makeText(ScanBarCode.this, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
+//                        Log.w("response", Objects.requireNonNull(t.getMessage()));
+//                        Toast.makeText(ScanBarCode.this, R.string.serverError , Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//
+//            } catch (Exception e) {
+//                runOnUiThread(() -> {
+//                    barcodeTextView.setText("Error: " + e.getMessage());
+//                });
+//            } finally {
+//                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+//                    processedBarcodes.remove(barcodeValue);
+//                }, 10000);
+//            }
 
     }
 

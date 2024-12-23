@@ -1,7 +1,6 @@
 package com.tafavotco.samarapp.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +14,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.tafavotco.samarapp.R;
+import com.tafavotco.samarapp.data.PreferencesHelper;
 
 public class HomeFragment extends Fragment {
 
+    PreferencesHelper preferencesHelper;
     private Button btn_registration;
     private Button btn_checkIn;
     private Button btn_checkOut;
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                preferencesHelper.setActivityTitle("");
                 Fragment fragment = new ScanBarCodeFragment();
                 Bundle bundle = new Bundle();
                 Bundle bundle_method = new Bundle();
@@ -58,9 +60,6 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
                 replaceFragment(fragment);
 
-//                Intent myIntent = new Intent(context, ScanBarCode.class);
-//                myIntent.putExtra("method", "registration");
-//                startActivity(myIntent);
             }
         });
 
@@ -68,6 +67,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                preferencesHelper.setActivityTitle("");
                 Fragment fragment = new ScanBarCodeFragment();
                 Bundle bundle = new Bundle();
                 Bundle bundle_method = new Bundle();
@@ -79,9 +79,6 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
                 replaceFragment(fragment);
 
-//                Intent myIntent = new Intent(context, ScanBarCode.class);
-//                myIntent.putExtra("method", "checkIn");
-//                startActivity(myIntent);
             }
         });
 
@@ -89,6 +86,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                preferencesHelper.setActivityTitle("");
                 Fragment fragment = new ScanBarCodeFragment();
                 Bundle bundle = new Bundle();
                 Bundle bundle_method = new Bundle();
@@ -100,16 +98,32 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
                 replaceFragment(fragment);
 
-//                Intent myIntent = new Intent(context, ScanBarCode.class);
-//                myIntent.putExtra("method", "checkOut");
-//                startActivity(myIntent);
             }
         });
 
         btn_get_activities.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                preferencesHelper.setActivityTitle("");
                 Fragment fragment = new ActivityListFragment();
+                replaceFragment(fragment);
+            }
+        });
+
+        btn_inquiry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                preferencesHelper.setActivityTitle("");
+                Fragment fragment = new InquiryFragment();
+                replaceFragment(fragment);
+            }
+        });
+
+        btn_about_us.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                preferencesHelper.setActivityTitle("");
+                Fragment fragment = new AboutUsFragment();
                 replaceFragment(fragment);
             }
         });
@@ -124,6 +138,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void init(View v) {
+        preferencesHelper = new PreferencesHelper(context);
         btn_registration = v.findViewById(R.id.btn_registration);
         btn_checkIn = v.findViewById(R.id.btn_checkIn);
         btn_checkOut = v.findViewById(R.id.btn_checkOut);

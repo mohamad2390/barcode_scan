@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class PreferencesHelper {
 
-    public SharedPreferences myPref , userName, Token , Event;
+    public SharedPreferences myPref , userName, Token , EventHash , EventTitle , ActivityTitle;
     public static final String name_category="name_category";
     public static final String key_category="key_category";
 
@@ -14,7 +14,10 @@ public class PreferencesHelper {
         myPref = context.getSharedPreferences(name_category , Context.MODE_PRIVATE);
         userName = context.getSharedPreferences("userName" , Context.MODE_PRIVATE);
         Token = context.getSharedPreferences("Token" , Context.MODE_PRIVATE);
-        Event = context.getSharedPreferences("Event" , Context.MODE_PRIVATE);
+        EventHash = context.getSharedPreferences("EventHash" , Context.MODE_PRIVATE);
+        EventTitle = context.getSharedPreferences("EventTitle" , Context.MODE_PRIVATE);
+        ActivityTitle = context.getSharedPreferences("ActivityTitle" , Context.MODE_PRIVATE);
+
     }
 
     public String getName_category(){
@@ -41,12 +44,27 @@ public class PreferencesHelper {
         Token.edit().putString("token" , token).apply();
     }
 
-    public String getEvent(){
-        return Event.getString("event" , "null");
+    public String getEventHash(){
+        return EventHash.getString("eventHash" , "null");
     }
 
-    public void setEvent(String event){
-        Event.edit().putString("event" , event).apply();
+    public void setEventHash(String eventHash){
+        EventHash.edit().putString("eventHash" , eventHash).apply();
     }
 
+    public String getEventTitle(){
+        return EventTitle.getString("eventTitle" , "null");
+    }
+
+    public void setEventTitle(String eventTitle){
+        EventTitle.edit().putString("eventTitle" , eventTitle).apply();
+    }
+
+    public String getActivityTitle(){
+        return ActivityTitle.getString("activityTitle" , "null");
+    }
+
+    public void setActivityTitle(String activityTitle){
+        ActivityTitle.edit().putString("activityTitle" , activityTitle).apply();
+    }
 }

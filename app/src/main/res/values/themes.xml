@@ -1,16 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.SamarApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">#ED9A7F</item>
-        <item name="colorPrimaryVariant">#ED9A7F</item>
+        <item name="colorPrimary">#1677FF</item>
+        <item name="colorPrimaryVariant">#1677FF</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">#FA9090</item>
-        <item name="colorSecondaryVariant">#FA9090</item>
+        <item name="colorSecondary">#1677FF</item>
+        <item name="colorSecondaryVariant">#1677FF</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
     <style name="Theme.SamarApp" parent="Base.Theme.SamarApp" />
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
 </resources>

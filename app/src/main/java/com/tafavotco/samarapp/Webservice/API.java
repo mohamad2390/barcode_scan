@@ -1,8 +1,7 @@
 package com.tafavotco.samarapp.Webservice;
 
-import com.tafavotco.samarapp.model.ActivityModel;
-import com.tafavotco.samarapp.model.EventModel;
 import com.tafavotco.samarapp.ui.Login;
+import com.tafavotco.samarapp.ui.ScanBarCodeFragment;
 import com.tafavotco.samarapp.ui.Verifying;
 
 import java.util.List;
@@ -26,25 +25,28 @@ public interface API {
     @POST("auth/login")
     Call<Map<String , Object>> sendCode(@Body Login.requestCode requestCodes);
 
-    @POST("events/registration")
-    Call<Map<String , Object>> registration(@Header("authorization") String token , @Path("participationHash") String participationHash);
+    @POST("panel/participants/register")
+    Call<Map<String , Object>> registration(@Header("authorization") String token , @Body ScanBarCodeFragment.ParticipantHashRequest participantHashRequest);
 
-    @POST("panel/participants/check-in/{participationHash}")
-    Call<Map<String , Object>> checkin(@Header("authorization") String token , @Path("participationHash") String participationHash);
+    @POST("panel/participants/check-in")
+    Call<Map<String , Object>> checkin(@Header("authorization") String token , @Body ScanBarCodeFragment.ParticipantHashRequest participantHashRequest);
 
-    @POST("panel/participants/check-out/{participationHash}")
-    Call<Map<String , Object>> checkout(@Header("authorization") String token , @Path("participationHash") String participationHash);
+    @POST("panel/participants/check-out")
+    Call<Map<String , Object>> checkout(@Header("authorization") String token , @Body ScanBarCodeFragment.ParticipantHashRequest participantHashRequest);
 
     @GET("panel/activities/all/{eventHash}")
-    Call<List<ActivityModel>> getActivities(@Header("authorization") String token , @Path("eventHash") String eventHash);
+    Call<List<Map<String , Object>>> getActivities(@Header("authorization") String token , @Path("eventHash") String eventHash);
 
     @GET("events/all/{page}")
-    Call<List<EventModel>> getEvents(@Path("page") Integer page);
+    Call<List<Map<String , Object>>> getEvents(@Path("page") Integer page);
 
-    @POST("activities/checkout")
-    Call<Map<String , Object>> activityCheckIn(@Header("authorization") String token , @Path("participationHash") String participationHash);
+    @POST("panel/activities/check-in")
+    Call<Map<String , Object>> activityCheckIn(@Header("authorization") String token , @Body ScanBarCodeFragment.ParticipantHashRequest participantHashRequest);
 
-    @POST("activities/checkout")
-    Call<Map<String , Object>> activityCheckOut(@Header("authorization") String token , @Path("participationHash") String participationHash);
+    @POST("panel/activities/check-out")
+    Call<Map<String , Object>> activityCheckOut(@Header("authorization") String token , @Body ScanBarCodeFragment.ParticipantHashRequest participantHashRequest);
+
+    @POST("panel/participants/inquiry")
+    Call<Map<String , Object>> inquiryParticipant(@Header("authorization") String token , @Body ScanBarCodeFragment.ParticipantHashRequest participantHashRequest);
 
 }

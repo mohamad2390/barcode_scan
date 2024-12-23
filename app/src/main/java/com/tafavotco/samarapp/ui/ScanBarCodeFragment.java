@@ -1,16 +1,14 @@
 package com.tafavotco.samarapp.ui;
 
-import static com.tafavotco.samarapp.data.constValue.server_URL;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +17,9 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.OptIn;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
@@ -34,29 +30,20 @@ import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 
-import com.bumptech.glide.Glide;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.tafavotco.samarapp.R;
-import com.tafavotco.samarapp.Webservice.WebserviceHelper;
 import com.tafavotco.samarapp.data.PreferencesHelper;
-import com.tafavotco.samarapp.utils.Convert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ScanBarCodeFragment extends Fragment {
 
@@ -67,13 +54,14 @@ public class ScanBarCodeFragment extends Fragment {
     private final List<String> processedBarcodes = new ArrayList<>();
     private FrameLayout feedbackOverlay;
     private String method;
-    private String activityId;
+    private String activityHash;
     private PreferencesHelper preferencesHelper;
     private Context context;
     private EditText edit_txt_phone;
     private Button send;
     private ImageView person_avatar;
-    private TextView txt_fName , txt_lName , txt_national_code;
+    private TextView txt_fName , txt_lName , txt_national_code , activity_title;
+    CustomDialog customDialog;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -100,6 +88,10 @@ public class ScanBarCodeFragment extends Fragment {
 //            requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
 //        }
 
+        if (!Objects.equals(preferencesHelper.getActivityTitle(), "")){
+            activity_title.setText(preferencesHelper.getActivityTitle());
+        }else activity_title.setText("فعالیتی انتخاب نشده است");
+
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 //            startCamera();
         } else {
@@ -109,7 +101,7 @@ public class ScanBarCodeFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
              method = Objects.requireNonNull(bundle.getBundle("bundle_method")).getString("method" , "");
-             activityId = Objects.requireNonNull(bundle.getBundle("bundle_activity_id")).getString("activity_id" , "");
+             activityHash = Objects.requireNonNull(bundle.getBundle("bundle_activity_id")).getString("activity_id" , "");
         }
 
         send.setOnClickListener(new View.OnClickListener() {
@@ -234,68 +226,68 @@ public class ScanBarCodeFragment extends Fragment {
         }
     }
 
-    private void startCamera() {
-        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(context);
-        cameraProviderFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-
-                // تنظیم پیش‌نمایش دوربین
-                Preview preview = new Preview.Builder().build();
-                preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-                // تنظیم تحلیل تصویر برای اسکن بارکد
-                ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-                        .setTargetResolution(new Size(1280, 720))
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                        .build();
-
-                imageAnalysis.setAnalyzer(cameraExecutor, imageProxy -> {
-                    @OptIn(markerClass = ExperimentalGetImage.class)
-                    Image mediaImage = imageProxy.getImage();
-                    if (mediaImage != null) {
-                        InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
-                        BarcodeScanner scanner = BarcodeScanning.getClient();
-                        scanner.process(image)
-                                .addOnSuccessListener(barcodes -> {
-                                    for (Barcode barcode : barcodes) {
-                                        String rawValue = barcode.getRawValue();
-
-                                        if (rawValue != null) {
-                                            // ارسال بارکد به وب‌سرویس
-                                            sendBarcodeToWebService(rawValue);
-                                        }
-
-                                        break; // فقط اولین بارکد پردازش شود
-                                    }
-                                })
-                                .addOnFailureListener(e -> barcodeTextView.setText("Error: " + e.getMessage()))
-                                .addOnCompleteListener(task -> imageProxy.close());
-                    }
-                });
-
-                // اتصال دوربین به لایف‌سایکل
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
-
-                cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, ContextCompat.getMainExecutor(context));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1001 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//    private void startCamera() {
+//        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(context);
+//        cameraProviderFuture.addListener(() -> {
+//            try {
+//                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+//
+//                // تنظیم پیش‌نمایش دوربین
+//                Preview preview = new Preview.Builder().build();
+//                preview.setSurfaceProvider(previewView.getSurfaceProvider());
+//
+//                // تنظیم تحلیل تصویر برای اسکن بارکد
+//                ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+//                        .setTargetResolution(new Size(1280, 720))
+//                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+//                        .build();
+//
+//                imageAnalysis.setAnalyzer(cameraExecutor, imageProxy -> {
+//                    @OptIn(markerClass = ExperimentalGetImage.class)
+//                    Image mediaImage = imageProxy.getImage();
+//                    if (mediaImage != null) {
+//                        InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+//                        BarcodeScanner scanner = BarcodeScanning.getClient();
+//                        scanner.process(image)
+//                                .addOnSuccessListener(barcodes -> {
+//                                    for (Barcode barcode : barcodes) {
+//                                        String rawValue = barcode.getRawValue();
+//
+//                                        if (rawValue != null) {
+//                                            // ارسال بارکد به وب‌سرویس
+//                                            sendBarcodeToWebService(rawValue);
+//                                        }
+//
+//                                        break; // فقط اولین بارکد پردازش شود
+//                                    }
+//                                })
+//                                .addOnFailureListener(e -> barcodeTextView.setText("Error: " + e.getMessage()))
+//                                .addOnCompleteListener(task -> imageProxy.close());
+//                    }
+//                });
+//
+//                // اتصال دوربین به لایف‌سایکل
+//                CameraSelector cameraSelector = new CameraSelector.Builder()
+//                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+//                        .build();
+//
+//                cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }, ContextCompat.getMainExecutor(context));
+//    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == 1001 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //            startCamera();
-        } else {
-            barcodeTextView.setText("Camera permission required");
-        }
-    }
+//        } else {
+//            barcodeTextView.setText("Camera permission required");
+//        }
+//    }
 
     @Override
     public void onDestroyView() {
@@ -305,84 +297,98 @@ public class ScanBarCodeFragment extends Fragment {
         }
     }
 
+    public static class ParticipantHashRequest{
+        private String eventHash;
+        private String activityHash;
+        private String participantHash;
+
+        public ParticipantHashRequest(String eventHash, String activityHash, String participantHash) {
+            this.eventHash = eventHash;
+            this.activityHash = activityHash;
+            this.participantHash = participantHash;
+        }
+    }
+
     private void sendBarcodeToWebService(String participationHash) {
+
         if (processedBarcodes.contains(participationHash)) {
             return;
         }
         processedBarcodes.add(participationHash);
 
-        Log.w("response2" , participationHash);
+        ParticipantHashRequest participantHashRequest = new ParticipantHashRequest(preferencesHelper.getEventHash() , activityHash , participationHash);
+        customDialog.showBottomDialog(participantHashRequest , method , activityHash);
+//
+//        Log.w("response2" , participationHash);
 
-        Call<Map<String , Object>> call;
-
-        if (method.equals("registration") && activityId.isEmpty()){
-            call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , participationHash);
-        }else if (method.equals("checkIn") && activityId.isEmpty()){
-            call = WebserviceHelper.getInstancePost().checkin("Bearer "+preferencesHelper.getToken() , participationHash);
-        }else if (method.equals("checkOut") && activityId.isEmpty()){
-            call = WebserviceHelper.getInstancePost().checkout("Bearer "+preferencesHelper.getToken() , participationHash);
-        }else if (method.equals("checkIn")){
-            call = WebserviceHelper.getInstancePost().activityCheckIn("Bearer "+preferencesHelper.getToken() , participationHash);
-        }else if (method.equals("checkOut")){
-            call = WebserviceHelper.getInstancePost().activityCheckOut("Bearer "+preferencesHelper.getToken() , participationHash);
-        }else call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , participationHash);
-
-
-        try {
-
-            call.enqueue(new Callback<Map<String , Object>>() {
-                @Override
-                public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
-                    if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
-                        showSuccessFeedback();
-                        if (response.body() != null && response.body().containsKey("message")){
-                            Toast.makeText(context, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
-                        }
-                        if (response.body().containsKey("id")){
-                            Glide.with(context)
-                                    .load(server_URL+"Participants/cover/"+ Objects.requireNonNull(response.body().get("id")).toString())
-                                    .placeholder(R.drawable.ic_launcher_foreground)
-                                    .into(person_avatar);
-                        }
-                        if (response.body().containsKey("fName") && response.body().containsKey("lName")){
-                            txt_fName.setText(Objects.requireNonNull(response.body().get("fName")).toString());
-                            txt_lName.setText(Objects.requireNonNull(response.body().get("lName")).toString());
-                        }
-                        if (response.body().containsKey("nCode")){
-                            txt_national_code.setText(Objects.requireNonNull(response.body().get("nCode")).toString());
-                        }
-                    }else {
-                        if (response.body() != null && response.body().containsKey("message")){
-                            Toast.makeText(context, Objects.requireNonNull(response.body().get("message")).toString() , Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
-                    Log.w("response1", Objects.requireNonNull(t.getMessage()));
-                    Toast.makeText(context, R.string.serverError , Toast.LENGTH_LONG).show();
-                }
-            });
-
-        } catch (Exception e) {
-            getActivity().runOnUiThread(() -> {
-                barcodeTextView.setText("Error: " + e.getMessage());
-            });
-        } finally {
+//        Call<Map<String , Object>> call;
+//
+//        if (method.equals("registration") && activityHash.isEmpty()){
+//            call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , participationHash);
+//        }else if (method.equals("checkIn") && activityHash.isEmpty()){
+//            call = WebserviceHelper.getInstancePost().checkin("Bearer "+preferencesHelper.getToken() , participationHash);
+//        }else if (method.equals("checkOut") && activityHash.isEmpty()){
+//            call = WebserviceHelper.getInstancePost().checkout("Bearer "+preferencesHelper.getToken() , participationHash);
+//        }else if (method.equals("checkIn")){
+//            call = WebserviceHelper.getInstancePost().activityCheckIn("Bearer "+preferencesHelper.getToken() , activityHash, participationHash);
+//        }else if (method.equals("checkOut")){
+//            call = WebserviceHelper.getInstancePost().activityCheckOut("Bearer "+preferencesHelper.getToken() , activityHash, participationHash);
+//        }else call = WebserviceHelper.getInstancePost().registration("Bearer "+preferencesHelper.getToken() , participationHash);
+//
+//
+//        try {
+//
+//            call.enqueue(new Callback<Map<String , Object>>() {
+//                @Override
+//                public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
+//                    if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
+//                        showSuccessFeedback();
+//                        if (response.body() != null && response.body().containsKey("warningMessage")){
+//                            Toast.makeText(context, Objects.requireNonNull(response.body().get("warningMessage")).toString() , Toast.LENGTH_LONG).show();
+//                        }
+//                    }else {
+//                        showFiledFeedback();
+//                        if (response.body() != null && response.body().containsKey("warningMessage")){
+//                            Toast.makeText(context, Objects.requireNonNull(response.body().get("warningMessage")).toString() , Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
+//                    Log.w("response1", Objects.requireNonNull(t.getMessage()));
+//                    Toast.makeText(context, R.string.serverError , Toast.LENGTH_LONG).show();
+//                }
+//            });
+//
+//        } catch (Exception e) {
+//            getActivity().runOnUiThread(() -> {
+//                barcodeTextView.setText("Error: " + e.getMessage());
+//            });
+//        } finally {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 processedBarcodes.remove(participationHash);
-            }, 10000);
-        }
+            }, 4000);
+//        }
 
     }
 
     private void showSuccessFeedback() {
+        feedbackOverlay.setBackgroundColor(Color.GREEN);
             feedbackOverlay.setVisibility(View.VISIBLE);
 
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 feedbackOverlay.setVisibility(View.GONE);
             }, 1000);
+    }
+
+    private void showFiledFeedback() {
+        feedbackOverlay.setBackgroundColor(Color.RED);
+        feedbackOverlay.setVisibility(View.VISIBLE);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            feedbackOverlay.setVisibility(View.GONE);
+        }, 1000);
     }
 
     private void init(View v) {
@@ -394,7 +400,9 @@ public class ScanBarCodeFragment extends Fragment {
         txt_national_code = v.findViewById(R.id.txt_national_code);
         previewView = v.findViewById(R.id.previewView);
         feedbackOverlay = v.findViewById(R.id.feedback_overlay);
+        activity_title = v.findViewById(R.id.txt_activity_title_global);
         preferencesHelper = new PreferencesHelper(context);
+        customDialog = new CustomDialog(context,preferencesHelper);
     }
 
 }

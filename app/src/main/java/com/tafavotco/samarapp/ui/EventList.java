@@ -12,14 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tafavotco.samarapp.R;
 import com.tafavotco.samarapp.Webservice.WebserviceHelper;
-import com.tafavotco.samarapp.adapter.ActivityAdapter;
 import com.tafavotco.samarapp.adapter.EventAdapter;
 import com.tafavotco.samarapp.data.PreferencesHelper;
-import com.tafavotco.samarapp.model.ActivityModel;
-import com.tafavotco.samarapp.model.EventModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,7 +26,7 @@ import retrofit2.Response;
 public class EventList extends AppCompatActivity {
 
     private RecyclerView list;
-    List<EventModel> data = new ArrayList<>();
+    List<Map<String , Object>> data = new ArrayList<>();
     private EventAdapter adapter;
     PreferencesHelper preferenceshelper;
 
@@ -36,17 +34,17 @@ public class EventList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.event_list);
         init();
 
         Integer page = 0;
 
-        WebserviceHelper.getInstancePost().getEvents(page).enqueue(new Callback<List<EventModel>>() {
+        WebserviceHelper.getInstancePost().getEvents(page).enqueue(new Callback<List<Map<String , Object>>>() {
             @Override
-            public void onResponse(@NonNull Call<List<EventModel>> call, @NonNull Response<List<EventModel>> response) {
+            public void onResponse(@NonNull Call<List<Map<String , Object>>> call, @NonNull Response<List<Map<String , Object>>> response) {
                 Log.w("1response--------------------", response.message());
-                if (response.body().get(0).getId() != null) {
-                    data = (List<EventModel>) response.body();
+                if (response.body() != null) {
+                    data = (List<Map<String , Object>>) response.body();
                     adapter = new EventAdapter(data , EventList.this);
                     list.setLayoutManager(new LinearLayoutManager(EventList.this));
                     list.setAdapter(adapter);
@@ -56,7 +54,7 @@ public class EventList extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<EventModel>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<Map<String , Object>>> call, @NonNull Throwable t) {
                 Log.w("response----------------------------", t.getMessage());
                 Toast.makeText(EventList.this, R.string.serverError , Toast.LENGTH_LONG).show();
             }

@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.tafavotco.samarapp.MainActivity;
 import com.tafavotco.samarapp.R;
 import com.tafavotco.samarapp.Webservice.WebserviceHelper;
 import com.tafavotco.samarapp.data.PreferencesHelper;
@@ -57,7 +56,6 @@ public class Verifying extends AppCompatActivity {
 
                     verifyCode = txt_verify.getText().toString();
                     RequestToken requestToken = new RequestToken(username , verifyCode);
-//                    Log.w("response111", requestToken.toString());
                     WebserviceHelper.getInstancePost().verify(requestToken).enqueue(new Callback<Map<String , Object>>() {
                         @Override
                         public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {

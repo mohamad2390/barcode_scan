@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.ScanBarCode">
 
+    <TextView
+        android:id="@+id/txt_activity_title_global"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#E01677FF"
+        android:gravity="center"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- TextView برای نمایش بارکد -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
@@ -15,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_activity_title_global" />
 
     <ImageView
         android:id="@+id/img_person_avatar"
@@ -62,7 +73,9 @@
         android:ems="10"
         android:inputType="number"
         android:background="@drawable/txt_backgrund"
-        android:hint="phone"
+        android:hint="@string/login_hint_text"
+        android:padding="8sp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/previewView" />
