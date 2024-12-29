@@ -25,6 +25,8 @@ import com.bumptech.glide.load.model.LazyHeaders;
 import com.tafavotco.samarapp.R;
 import com.tafavotco.samarapp.Webservice.WebserviceHelper;
 import com.tafavotco.samarapp.data.PreferencesHelper;
+import com.tafavotco.samarapp.model.ActivityRequestModel;
+import com.tafavotco.samarapp.model.EventRequestModel;
 import com.tafavotco.samarapp.utils.Convert;
 
 import java.util.Map;
@@ -44,7 +46,7 @@ public class CustomDialog {
         this.preferencesHelper = preferencesHelper;
     }
 
-    public void showBottomDialog(ScanBarCodeFragment.ParticipantHashRequest participantHashRequest , String method , String activityHash) {
+    public void showBottomDialog(String eventHash , String participantHash , String method , String activityHash) {
 
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -58,8 +60,9 @@ public class CustomDialog {
         Button dialog_button = dialog.findViewById(R.id.dialog_button);
 
         String token = "Bearer " + preferencesHelper.getToken();
+        EventRequestModel eventRequest = new EventRequestModel(eventHash , participantHash);
 
-        WebserviceHelper.getInstancePost().inquiryParticipant(token , participantHashRequest).enqueue(new Callback<Map<String , Object>>() {
+        WebserviceHelper.getInstancePost().inquiryParticipant(token , eventRequest).enqueue(new Callback<Map<String , Object>>() {
             @Override
             public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
                 if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
@@ -108,18 +111,19 @@ public class CustomDialog {
             @Override
             public void onClick(View v) {
 
+                ActivityRequestModel activityRequest = new ActivityRequestModel(eventHash , activityHash , participantHash);
                 Call<Map<String , Object>> call;
 
                 if (method.equals("registration") && activityHash.isEmpty()){
-                    call = WebserviceHelper.getInstancePost().registration(token , participantHashRequest);
+                    call = WebserviceHelper.getInstancePost().registration(token , eventRequest);
                 }else if (method.equals("checkIn") && activityHash.isEmpty()){
-                    call = WebserviceHelper.getInstancePost().checkin(token , participantHashRequest);
+                    call = WebserviceHelper.getInstancePost().checkin(token , eventRequest);
                 }else if (method.equals("checkOut") && activityHash.isEmpty()){
-                    call = WebserviceHelper.getInstancePost().checkout(token , participantHashRequest);
+                    call = WebserviceHelper.getInstancePost().checkout(token , eventRequest);
                 }else if (method.equals("checkIn")){
-                    call = WebserviceHelper.getInstancePost().activityCheckIn(token , participantHashRequest);
+                    call = WebserviceHelper.getInstancePost().activityCheckIn(token , activityRequest);
                 }else if (method.equals("checkOut")){
-                    call = WebserviceHelper.getInstancePost().activityCheckOut(token , participantHashRequest);
+                    call = WebserviceHelper.getInstancePost().activityCheckOut(token , activityRequest);
                 }else {
                     return;
                 }

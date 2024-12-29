@@ -158,18 +158,6 @@ public class ScanBarCodeFragment extends Fragment {
         }
     }
 
-    public static class ParticipantHashRequest{
-        private String eventHash;
-        private String activityHash;
-        private String participantHash;
-
-        public ParticipantHashRequest(String eventHash, String activityHash, String participantHash) {
-            this.eventHash = eventHash;
-            this.activityHash = activityHash;
-            this.participantHash = participantHash;
-        }
-    }
-
     private void sendBarcodeToWebService(String participationHash) {
 
         if (processedBarcodes.contains(participationHash)) {
@@ -177,8 +165,7 @@ public class ScanBarCodeFragment extends Fragment {
         }
         processedBarcodes.add(participationHash);
 
-        ParticipantHashRequest participantHashRequest = new ParticipantHashRequest(preferencesHelper.getEventHash() , activityHash , participationHash);
-        customDialog.showBottomDialog(participantHashRequest , method , activityHash);
+        customDialog.showBottomDialog(preferencesHelper.getEventHash() , participationHash , method , activityHash);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 processedBarcodes.remove(participationHash);

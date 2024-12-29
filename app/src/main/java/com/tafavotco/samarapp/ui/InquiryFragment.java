@@ -45,8 +45,7 @@ public class InquiryFragment extends Fragment {
             public void onClick(View view) {
                 String nCode = edit_txt_national_code.getText().toString();
 
-                ScanBarCodeFragment.ParticipantHashRequest participantHashRequest = new ScanBarCodeFragment.ParticipantHashRequest(preferencesHelper.getEventHash() , "" , nCode);
-                customDialog.showBottomDialog(participantHashRequest , "" , "");
+                customDialog.showBottomDialog(preferencesHelper.getEventHash() , nCode , "" , "");
 
             }
         });
