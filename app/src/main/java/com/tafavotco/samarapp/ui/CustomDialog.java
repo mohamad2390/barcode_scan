@@ -128,7 +128,6 @@ public class CustomDialog {
                     return;
                 }
 
-
                     call.enqueue(new Callback<Map<String , Object>>() {
                         @Override
                         public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
@@ -156,7 +155,6 @@ public class CustomDialog {
                 dialog.dismiss();
             }
         });
-
 
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
