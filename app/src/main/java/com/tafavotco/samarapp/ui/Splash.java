@@ -11,7 +11,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.tafavotco.samarapp.MainActivity;
 import com.tafavotco.samarapp.R;
 import com.tafavotco.samarapp.Webservice.WebserviceHelper;
 import com.tafavotco.samarapp.data.PreferencesHelper;
@@ -49,6 +48,7 @@ public class Splash extends AppCompatActivity {
                     startActivity(myIntent);
                     finish();
                 }else {
+
                     WebserviceHelper.getInstancePost().checkToken("Bearer "+preferencesHelper.getToken()).enqueue(new Callback<Map<String , Object>>() {
                         @Override
                         public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {

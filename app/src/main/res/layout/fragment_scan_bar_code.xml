@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ScanBarCode">
+    tools:context=".ui.ScanBarCodeFragment">
 
     <TextView
         android:id="@+id/txt_activity_title_global"
@@ -28,43 +28,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_activity_title_global" />
 
-    <ImageView
-        android:id="@+id/img_person_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_send"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/txt_fName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_person_avatar" />
-
-    <TextView
-        android:id="@+id/txt_lName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_fName" />
-
-    <TextView
-        android:id="@+id/txt_national_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_lName" />
-
     <EditText
         android:id="@+id/edit_txt_phone"
         android:layout_width="wrap_content"
@@ -73,7 +36,7 @@
         android:ems="10"
         android:inputType="number"
         android:background="@drawable/txt_backgrund"
-        android:hint="@string/login_hint_text"
+        android:hint="@string/inquiry_hint_text"
         android:padding="8sp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,5 +65,16 @@
         app:layout_constraintTop_toBottomOf="@+id/previewView">
 
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/scan_barcode_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_send" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@
     <string name="serverError">مشکل برقراری ارتباط</string>
     <string name="login_notInsertUserName">شماره موبایل خود را وارد کنید</string>
     <string name="login_hint_text">شماره موبایل</string>
+    <string name="inquiry_hint_text">کد ملی</string>
     <string name="txt_send">ارسال</string>
     <string name="txt_code">کد ورود به سیستم</string>
     <string name="txt_enter">ورود</string>

@@ -46,7 +46,7 @@ public class CustomDialog {
         this.preferencesHelper = preferencesHelper;
     }
 
-    public void showBottomDialog(String eventHash , String participantHash , String method , String activityHash) {
+    public void showBottomDialog(String eventHash , String participantHash , String method , String activityHash , Map<String , Object> response) {
 
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -60,50 +60,29 @@ public class CustomDialog {
         Button dialog_button = dialog.findViewById(R.id.dialog_button);
 
         String token = "Bearer " + preferencesHelper.getToken();
-        EventRequestModel eventRequest = new EventRequestModel(eventHash , participantHash);
 
-        WebserviceHelper.getInstancePost().inquiryParticipant(token , eventRequest).enqueue(new Callback<Map<String , Object>>() {
-            @Override
-            public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
-                if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
-                    if (response.body() != null && response.body().containsKey("warningMessage")){
-                        Toast.makeText(context, Objects.requireNonNull(response.body().get("warningMessage")).toString() , Toast.LENGTH_LONG).show();
-                    }
-                    if (response.body().containsKey("id")){
-                        String imageUrl = server_URL + "events/avatars/" + Objects.requireNonNull(response.body().get("id")).toString();
+        if (response.containsKey("id")){
+            String imageUrl = server_URL + "events/avatars/" + Objects.requireNonNull(response.get("id")).toString();
 
-                        GlideUrl glideUrl = new GlideUrl(imageUrl,
-                                new LazyHeaders.Builder()
-                                        .addHeader("Authorization", token)
-                                        .build());
+            GlideUrl glideUrl = new GlideUrl(imageUrl,
+                    new LazyHeaders.Builder()
+                            .addHeader("Authorization", token)
+                            .build());
 
-                        Glide.with(context)
-                                .load(glideUrl)
-                                .into(img_person_avatar);
-                    }
-                    if (response.body().containsKey("firstName") && response.body().containsKey("lastName")){
-                        txt_fName.setText(Objects.requireNonNull(response.body().get("firstName")).toString());
-                        txt_lName.setText(Objects.requireNonNull(response.body().get("lastName")).toString());
-                    }
-                    if (response.body().containsKey("status")){
-                        txt_status.setText(Objects.requireNonNull(response.body().get("status")).toString());
-                    }
-                    if (response.body().containsKey("nationalCode")){
-                        txt_national_code.setText(Objects.requireNonNull(response.body().get("nationalCode")).toString());
-                    }
-                }else {
-                    if (response.body() != null && response.body().containsKey("warningMessage")){
-                        Toast.makeText(context, Objects.requireNonNull(response.body().get("warningMessage")).toString() , Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
-                Log.w("response1", Objects.requireNonNull(t.getMessage()));
-                Toast.makeText(context, R.string.serverError , Toast.LENGTH_LONG).show();
-            }
-        });
+            Glide.with(context)
+                    .load(glideUrl)
+                    .into(img_person_avatar);
+        }
+        if (response.containsKey("firstName") && response.containsKey("lastName")){
+            txt_fName.setText(Objects.requireNonNull(response.get("firstName")).toString());
+            txt_lName.setText(Objects.requireNonNull(response.get("lastName")).toString());
+        }
+        if (response.containsKey("status")){
+            txt_status.setText(Objects.requireNonNull(response.get("status")).toString());
+        }
+        if (response.containsKey("nationalCode")){
+            txt_national_code.setText(Objects.requireNonNull(response.get("nationalCode")).toString());
+        }
 
 
         dialog_button.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +90,7 @@ public class CustomDialog {
             @Override
             public void onClick(View v) {
 
+                EventRequestModel eventRequest = new EventRequestModel(eventHash , participantHash);
                 ActivityRequestModel activityRequest = new ActivityRequestModel(eventHash , activityHash , participantHash);
                 Call<Map<String , Object>> call;
 
@@ -134,7 +114,11 @@ public class CustomDialog {
                             if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
                                 Toast.makeText(context, "ثبت شد" , Toast.LENGTH_LONG).show();
                                 if (response.body() != null && response.body().containsKey("warningMessage")){
-                                    Toast.makeText(context, Objects.requireNonNull(response.body().get("warningMessage")).toString() , Toast.LENGTH_LONG).show();
+                                    Toast toast = new Toast(context);
+                                    toast.setText(Objects.requireNonNull(response.body().get("warningMessage")).toString());
+                                    toast.setDuration(Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.TOP , 0, 0);
+                                    toast.show();
                                 }
                             }else {
                                 Toast.makeText(context, "ثبت نشد" , Toast.LENGTH_LONG).show();

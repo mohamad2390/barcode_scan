@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,13 +36,21 @@ import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.tafavotco.samarapp.R;
+import com.tafavotco.samarapp.Webservice.WebserviceHelper;
 import com.tafavotco.samarapp.data.PreferencesHelper;
+import com.tafavotco.samarapp.model.EventRequestModel;
+import com.tafavotco.samarapp.utils.Convert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ScanBarCodeFragment extends Fragment {
 
@@ -55,6 +65,7 @@ public class ScanBarCodeFragment extends Fragment {
     private EditText edit_txt_phone;
     private Button send;
     private TextView  activity_title;
+    private ProgressBar progressBar;
     CustomDialog customDialog;
 
     @Override
@@ -165,7 +176,32 @@ public class ScanBarCodeFragment extends Fragment {
         }
         processedBarcodes.add(participationHash);
 
-        customDialog.showBottomDialog(preferencesHelper.getEventHash() , participationHash , method , activityHash);
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setProgress(50 , true);
+
+        String token = "Bearer " + preferencesHelper.getToken();
+        EventRequestModel eventRequest = new EventRequestModel(preferencesHelper.getEventHash() , participationHash);
+
+        WebserviceHelper.getInstancePost().inquiryParticipant(token , eventRequest).enqueue(new Callback<Map<String , Object>>() {
+            @Override
+            public void onResponse(@NonNull Call<Map<String , Object>> call, @NonNull Response<Map<String , Object>> response) {
+                if (response.body() != null && response.body().containsKey("success") && Convert.toBoolean(response.body().get("success"))) {
+                    if (response.body().containsKey("id")){
+                        progressBar.setVisibility(View.GONE);
+                        customDialog.showBottomDialog(preferencesHelper.getEventHash() , participationHash , method , activityHash , response.body());
+                    }
+                }else {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(context, "شرکت کننده یافت نشد" , Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Map<String , Object>> call, @NonNull Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(context, R.string.serverError , Toast.LENGTH_LONG).show();
+            }
+        });
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 processedBarcodes.remove(participationHash);
@@ -178,6 +214,7 @@ public class ScanBarCodeFragment extends Fragment {
         send = v.findViewById(R.id.btn_send);
         previewView = v.findViewById(R.id.previewView);
         activity_title = v.findViewById(R.id.txt_activity_title_global);
+        progressBar = v.findViewById(R.id.scan_barcode_progressBar);
         preferencesHelper = new PreferencesHelper(context);
         customDialog = new CustomDialog(context,preferencesHelper);
     }
